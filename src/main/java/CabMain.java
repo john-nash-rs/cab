@@ -26,17 +26,17 @@ public class CabMain {
         Rider rider = new Rider();
         rider.setName("harsh");
         rider.setCountryCode("+91");
-        rider.setPhoneNumber("9108013898");
+        rider.setPhoneNumber("910");
         riderService.register(rider);
 
         Driver driver = new Driver();
         driver.setName("harsh Driver");
         driver.setCountryCode("+91");
-        driver.setPhoneNumber("9431494143");
+        driver.setPhoneNumber("9431");
         driverService.register(driver);
 
         Vehicle vehicle = new Vehicle();
-        vehicle.setCarNumber("KA01HK0243");
+        vehicle.setCarNumber("KA01HK");
         vehicle.setLat(1D);
         vehicle.setLon(1D);
         vehicleService.registerVehicle(vehicle);
@@ -45,9 +45,9 @@ public class CabMain {
         vehicle.setLon(2D);
         vehicleService.updateLocation(vehicle);
 
-        bookingService.book("+919108013898", 1D, 2D);
+        bookingService.book("+91910", 1D, 2D);
 
-        List<Booking> bookingHistory = bookingService.history("+919108013898");
+        List<Booking> bookingHistory = bookingService.history("+91910");
         System.out.println("bookingHistory"+bookingHistory);
 
 
