@@ -7,6 +7,7 @@ import driver.models.Driver;
 import rider.models.Rider;
 import vehicle.models.Vehicle;
 
+import java.sql.SQLException;
 import java.util.*;
 
 public class StorageServiceImpl implements IStorageService {
@@ -33,7 +34,7 @@ public class StorageServiceImpl implements IStorageService {
         if(db.findRiderByRiderUniqueId(riderUniqueId) != null){
             throw new RuntimeException("Rider already exist in the system");
         }
-        this.riderStorage.put(riderUniqueId, rider);
+        db.addRider(rider);
         System.out.println("******* riderStorage******"+riderStorage);
         return true;
     }
@@ -46,7 +47,7 @@ public class StorageServiceImpl implements IStorageService {
         if(db.findDriverByDriverUniqueId(driverUniqueId) != null){
             throw new RuntimeException("Driver already exist in the system");
         }
-        this.driverStorage.put(driverUniqueId, driver);
+        db.addDriver(driver);
         System.out.println("******* driverStorage******"+driverStorage);
         return true;
     }
@@ -56,7 +57,7 @@ public class StorageServiceImpl implements IStorageService {
         if(db.findVehicleByCarNumber(vehicle.getCarNumber()) != null){
             throw new RuntimeException("Vehicle already exist in the system");
         }
-        this.vehicleStorage.put(vehicle.getCarNumber(), vehicle);
+        db.addVehicle(vehicle);
         System.out.println("******* vehicleStorage******"+vehicleStorage);
         return true;
     }
@@ -69,14 +70,14 @@ public class StorageServiceImpl implements IStorageService {
         Vehicle vehicleInDb = db.findVehicleByCarNumber(vehicle.getCarNumber());
         vehicleInDb.setLat(vehicle.getLat());
         vehicleInDb.setLon(vehicle.getLon());
-        this.vehicleStorage.put(vehicle.getCarNumber(), vehicleInDb);
+        db.updateVehicleLocation(vehicleInDb);
         System.out.println("******* vehicleStorage After Updating lat lon******"+vehicleStorage);
         return true;
     }
 
     @Override
     public Boolean book(Booking booking) {
-        this.bookingStorage.put(booking.getBookingId(), booking);
+        db.saveBooking(booking);
         Rider rider = db.findRiderByUserId(booking.getRiderUserId());
         List<String> bookingHistory = rider.getBookingHistory();
         if(bookingHistory == null){
@@ -126,6 +127,7 @@ public class StorageServiceImpl implements IStorageService {
         }
         booking.setEndTime(timeStamp);
         booking.setStatus(COMPLETED);
+        db.updateBooking(booking);
         return true;
     }
 }

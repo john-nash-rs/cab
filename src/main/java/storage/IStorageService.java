@@ -5,6 +5,7 @@ import driver.models.Driver;
 import rider.models.Rider;
 import vehicle.models.Vehicle;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface IStorageService {

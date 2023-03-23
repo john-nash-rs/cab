@@ -10,7 +10,7 @@ import java.sql.SQLException;
 public interface IDatabaseService {
     public Rider findRiderByRiderUniqueId(String riderUniqueId);
 
-    public void addRider(Rider rider) throws SQLException;
+    public void addRider(Rider rider);
 
     public Rider findRiderByUserId(String userId);
 
@@ -28,5 +28,6 @@ public interface IDatabaseService {
 
     public void saveBooking(Booking booking);
 
+    public void updateBooking(Booking booking);
 
 }
