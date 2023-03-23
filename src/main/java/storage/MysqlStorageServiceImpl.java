@@ -18,7 +18,7 @@ public class MysqlStorageServiceImpl implements IStorageService {
     private MysqlStorageHelper mysqlStorageHelper = new MysqlStorageHelper(dbDriver);
 
     public MysqlStorageServiceImpl() throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-        createConnection();
+        createDbConnection();
     }
 
     private static void createDbConnection() throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
