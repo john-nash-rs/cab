@@ -1,4 +1,4 @@
-package database;
+package storage;
 
 import booking.models.Booking;
 import driver.models.Driver;
@@ -6,31 +6,15 @@ import rider.models.Rider;
 import vehicle.models.Vehicle;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class DatabaseServiceImpl implements IDatabaseService {
-    private static Connection dbDriver = null;
-    private static String databaseName = "cabdb";
-    private static String url = "jdbc:mysql://localhost:3306/" + databaseName;
-    private static String userName = "root";
-    private static String password = "";
-
-    public static void createDbConnection() throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-        if(dbDriver == null) {
-            synchronized (DatabaseServiceImpl.class) {
-                if(dbDriver == null){
-                    createConnection();
-                }
-            }
-        }
+public class MysqlStorageHelper {
+    private Connection dbDriver;
+    public MysqlStorageHelper(Connection dbDriver){
+        this.dbDriver = dbDriver;
     }
 
-    private static Connection createConnection() throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-        Class.forName("com.mysql.jdbc.Driver").newInstance();
-        dbDriver = DriverManager.getConnection(url, userName, password);
-        return dbDriver;
-    }
-
-    @Override
     public Rider findRiderByRiderUniqueId(String riderUniqueId) {
         Rider rider = new Rider();
         String sql = "SELECT id, name, country_code, phone_number " +
@@ -51,12 +35,12 @@ public class DatabaseServiceImpl implements IDatabaseService {
         return rider;
     }
 
-    @Override
+
     public void addRider(Rider rider) {
         String sql = " insert into rider (name, country_code, phone_number)"
                 + " values (?, ?, ?)";
         try (
-             PreparedStatement pstmt = dbDriver.prepareStatement(sql);) {
+                PreparedStatement pstmt = dbDriver.prepareStatement(sql);) {
 
             // set parameters for statement
             pstmt.setString(1, rider.getName());
@@ -68,7 +52,7 @@ public class DatabaseServiceImpl implements IDatabaseService {
         }
     }
 
-    @Override
+
     public Rider findRiderByUserId(String userId) {
         Rider rider = new Rider();
         String sql = "SELECT id, name, country_code, phone_number " +
@@ -89,7 +73,7 @@ public class DatabaseServiceImpl implements IDatabaseService {
         return rider;
     }
 
-    @Override
+
     public Driver findDriverByDriverUniqueId(String driverUniqueId) {
         Driver driver = new Driver();
         String sql = "SELECT id, name, country_code, phone_number " +
@@ -109,7 +93,7 @@ public class DatabaseServiceImpl implements IDatabaseService {
         return driver;
     }
 
-    @Override
+
     public void addDriver(Driver driver) {
         String sql = " insert into driver (name, country_code, phone_number)"
                 + " values (?, ?, ?)";
@@ -126,7 +110,7 @@ public class DatabaseServiceImpl implements IDatabaseService {
         }
     }
 
-    @Override
+
     public Vehicle findVehicleByCarNumber(String carNumber) {
         Vehicle vehicle = new Vehicle();
         String sql = "SELECT car_number, lat, lon, type, is_available, driver_id" +
@@ -148,7 +132,22 @@ public class DatabaseServiceImpl implements IDatabaseService {
         return vehicle;
     }
 
-    @Override
+    public List<String> getAllVehicle() {
+        List<String> vehicles = new ArrayList<>();
+        String sql = "SELECT car_number" +
+                "FROM vehicle";
+        try (
+                Statement stmt  = dbDriver.createStatement();
+                ResultSet rs    = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                vehicles.add(rs.getString("car_number"));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return vehicles;
+    }
+
     public void addVehicle(Vehicle vehicle) {
         String sql = " insert into vehicle (car_number, lat, lon, type, is_available, driver_id)"
                 + " values (?, ?, ?, ?, ?, ?)";
@@ -168,7 +167,7 @@ public class DatabaseServiceImpl implements IDatabaseService {
         }
     }
 
-    @Override
+
     public void updateVehicleLocation(Vehicle vehicle) {
         String sql = "UPDATE vehicle "
                 + "SET lat = ? , lon = ?"
@@ -185,7 +184,7 @@ public class DatabaseServiceImpl implements IDatabaseService {
         }
     }
 
-    @Override
+
     public Booking findBookingById(String id) {
         Booking booking = new Booking();
         String sql = "SELECT booking_id, rider_user_id, car_number, start_time, end_time, status" +
@@ -207,7 +206,7 @@ public class DatabaseServiceImpl implements IDatabaseService {
         return booking;
     }
 
-    @Override
+
     public void saveBooking(Booking booking) {
         String sql = " insert into vehicle (booking_id, rider_user_id, car_number, start_time, end_time, status)"
                 + " values (?, ?, ?, ?, ?, ?, ?)";
@@ -228,7 +227,7 @@ public class DatabaseServiceImpl implements IDatabaseService {
         }
     }
 
-    @Override
+
     public void updateBooking(Booking booking) {
         String sql = "UPDATE booking "
                 + "SET end_time = ? , status = ?"
@@ -239,6 +238,21 @@ public class DatabaseServiceImpl implements IDatabaseService {
             pstmt.setString(1, booking.getBookingId());
             pstmt.setLong(2, booking.getEndTime());
             pstmt.setString(3, booking.getStatus());
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    public void addBookingHistory(Booking booking, Rider rider) {
+        String sql = " insert into bookinghistory (booking_id, rider_user_id)"
+                + " values (?, ?)";
+        try (
+                PreparedStatement pstmt = dbDriver.prepareStatement(sql);) {
+
+            // set parameters for statement
+            pstmt.setString(1, booking.getBookingId());
+            pstmt.setDouble(2, rider.getId());
             pstmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());

@@ -1,40 +1,34 @@
 package storage;
 
 import booking.models.Booking;
-import database.DatabaseServiceImpl;
-import database.IDatabaseService;
 import driver.models.Driver;
 import rider.models.Rider;
 import vehicle.models.Vehicle;
 
-import java.sql.SQLException;
 import java.util.*;
 
-public class StorageServiceImpl implements IStorageService {
+public class InMemoryStorageServiceImpl implements IStorageService {
     public static final String COMPLETED = "COMPLETED";
     private Map<String, Rider> riderStorage;
     private Map<String, Driver> driverStorage;
     private Map<String, Vehicle> vehicleStorage;
     private Map<String, Booking> bookingStorage;
 
-    private IDatabaseService db;
-
-    public StorageServiceImpl(IDatabaseService db) {
+    public InMemoryStorageServiceImpl() {
         this.riderStorage = new HashMap<>();
         this.driverStorage = new HashMap<>();
         this.vehicleStorage = new HashMap<>();
         this.bookingStorage = new HashMap<>();
-        this.db = db;
     }
 
     public Boolean saveRider(Rider rider) {
         StringBuffer sb = new StringBuffer();
         sb.append(rider.getCountryCode()).append(rider.getPhoneNumber());
         String riderUniqueId = sb.toString();
-        if(db.findRiderByRiderUniqueId(riderUniqueId) != null){
+        if(this.riderStorage.get(riderUniqueId) != null){
             throw new RuntimeException("Rider already exist in the system");
         }
-        db.addRider(rider);
+        this.riderStorage.put(riderUniqueId, rider);
         System.out.println("******* riderStorage******"+riderStorage);
         return true;
     }
@@ -44,41 +38,41 @@ public class StorageServiceImpl implements IStorageService {
         StringBuffer sb = new StringBuffer();
         sb.append(driver.getCountryCode()).append(driver.getPhoneNumber());
         String driverUniqueId = sb.toString();
-        if(db.findDriverByDriverUniqueId(driverUniqueId) != null){
+        if(this.driverStorage.get(driverUniqueId) != null){
             throw new RuntimeException("Driver already exist in the system");
         }
-        db.addDriver(driver);
+        this.driverStorage.put(driverUniqueId, driver);
         System.out.println("******* driverStorage******"+driverStorage);
         return true;
     }
 
     @Override
     public Boolean saveVehicle(Vehicle vehicle) {
-        if(db.findVehicleByCarNumber(vehicle.getCarNumber()) != null){
+        if(this.vehicleStorage.get(vehicle.getCarNumber()) != null){
             throw new RuntimeException("Vehicle already exist in the system");
         }
-        db.addVehicle(vehicle);
+        this.vehicleStorage.put(vehicle.getCarNumber(), vehicle);
         System.out.println("******* vehicleStorage******"+vehicleStorage);
         return true;
     }
 
     @Override
     public Boolean updateLocation(Vehicle vehicle) {
-        if(db.findVehicleByCarNumber(vehicle.getCarNumber()) == null){
+        if(this.vehicleStorage.get(vehicle.getCarNumber()) == null){
             throw new RuntimeException("Vehicle does not exist in the system");
         }
-        Vehicle vehicleInDb = db.findVehicleByCarNumber(vehicle.getCarNumber());
+        Vehicle vehicleInDb = this.vehicleStorage.get(vehicle.getCarNumber());
         vehicleInDb.setLat(vehicle.getLat());
         vehicleInDb.setLon(vehicle.getLon());
-        db.updateVehicleLocation(vehicleInDb);
+        this.vehicleStorage.put(vehicle.getCarNumber(), vehicleInDb);
         System.out.println("******* vehicleStorage After Updating lat lon******"+vehicleStorage);
         return true;
     }
 
     @Override
     public Boolean book(Booking booking) {
-        db.saveBooking(booking);
-        Rider rider = db.findRiderByUserId(booking.getRiderUserId());
+        this.bookingStorage.put(booking.getBookingId(), booking);
+        Rider rider = this.riderStorage.get(booking.getRiderUserId());
         List<String> bookingHistory = rider.getBookingHistory();
         if(bookingHistory == null){
             bookingHistory = new ArrayList<>();
@@ -95,7 +89,7 @@ public class StorageServiceImpl implements IStorageService {
     public Vehicle find(Double lat, Double lon, Double maxDistance) {
         TreeMap<Double, Vehicle> distanceVehicleMap = new TreeMap<>();
         for(String vehicleId : this.vehicleStorage.keySet()){
-            Vehicle vehicle = db.findVehicleByCarNumber(vehicleId);
+            Vehicle vehicle = this.vehicleStorage.get(vehicleId);
             Double distance = Math.sqrt((lon)*(vehicle.getLon()) +(lat)*(vehicle.getLat()));
             if(distance < maxDistance) {
                 distanceVehicleMap.put(distance, vehicle);
@@ -106,7 +100,7 @@ public class StorageServiceImpl implements IStorageService {
 
     @Override
     public List<Booking> rideHistory(String riderUserId) {
-        Rider rider = db.findRiderByUserId(riderUserId);
+        Rider rider = this.riderStorage.get(riderUserId);
         List<String> riderBookingIdsHistory = rider.getBookingHistory();
         List<Booking> bookingHistory = new ArrayList<>();
         for(String bookingId : riderBookingIdsHistory){
@@ -118,7 +112,7 @@ public class StorageServiceImpl implements IStorageService {
 
     @Override
     public Boolean endTrip(Long timeStamp, String bookingId) {
-        Booking booking = db.findBookingById(bookingId);
+        Booking booking = this.bookingStorage.get(bookingId);
         if(booking == null){
             throw new RuntimeException("No trip by this Id");
         }
@@ -127,7 +121,6 @@ public class StorageServiceImpl implements IStorageService {
         }
         booking.setEndTime(timeStamp);
         booking.setStatus(COMPLETED);
-        db.updateBooking(booking);
         return true;
     }
 }
