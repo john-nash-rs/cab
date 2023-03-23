@@ -11,10 +11,10 @@ public class StorageFactory {
         storageDictonary.put("Mysql", new MysqlStorageServiceImpl());
     }
     public static IStorageService getStorageInstance(String storageType){
-        if(storageDictonary.get(storageType) != null){
-            return storageDictonary.get(storageType);
+        if(storageDictonary.get(storageType) == null){
+            throw new RuntimeException("Invalid storage");
         }
         System.out.println("********** Invalid storage type selection ************");
-        return null;
+        return storageDictonary.get(storageType);
     }
 }
