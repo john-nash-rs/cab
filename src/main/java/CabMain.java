@@ -1,6 +1,8 @@
 import booking.models.Booking;
 import booking.service.BookingServiceImpl;
 import booking.service.IBookingService;
+import database.DatabaseServiceImpl;
+import database.IDatabaseService;
 import driver.models.Driver;
 import driver.services.DriverServiceImpl;
 import driver.services.IDriverService;
@@ -13,16 +15,19 @@ import vehicle.models.Vehicle;
 import vehicle.services.IVehicleService;
 import vehicle.services.VehicleServiceImpl;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class CabMain {
-    private static IStorageService storageService = new StorageServiceImpl();
+    private static IDatabaseService db = new DatabaseServiceImpl();
+    private static IStorageService storageService = new StorageServiceImpl(db);
     private static IRiderService riderService = new RiderServiceImpl(storageService);
     private static IDriverService driverService = new DriverServiceImpl(storageService);
     private static IVehicleService vehicleService = new VehicleServiceImpl(storageService);
     private static IBookingService bookingService = new BookingServiceImpl(vehicleService, storageService);
 
-    public static void main(String args[]){
+    public static void main(String args[]) throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+        DatabaseServiceImpl.createDbConnection();
         Rider rider = new Rider();
         rider.setName("harsh");
         rider.setCountryCode("+91");
