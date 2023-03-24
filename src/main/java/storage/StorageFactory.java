@@ -12,9 +12,9 @@ public class StorageFactory {
     }
     public static IStorageService getStorageInstance(String storageType){
         if(storageDictonary.get(storageType) == null){
+            System.out.println("********** Invalid storage type selection ************");
             throw new RuntimeException("Invalid storage");
         }
-        System.out.println("********** Invalid storage type selection ************");
         return storageDictonary.get(storageType);
     }
 }

@@ -37,8 +37,8 @@ public class MysqlStorageHelper {
 
 
     public void addRider(Rider rider) {
-        String sql = " insert into rider (name, country_code, phone_number)"
-                + " values (?, ?, ?)";
+        String sql = " insert into rider (name, country_code, phone_number, rider_unique_id)"
+                + " values (?, ?, ?, ?)";
         try (
                 PreparedStatement pstmt = dbDriver.prepareStatement(sql);) {
 
@@ -46,6 +46,7 @@ public class MysqlStorageHelper {
             pstmt.setString(1, rider.getName());
             pstmt.setString(2, rider.getCountryCode());
             pstmt.setString(3, rider.getPhoneNumber());
+            pstmt.setString(4, rider.getCountryCode()+rider.getPhoneNumber());
             pstmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -77,7 +78,7 @@ public class MysqlStorageHelper {
     public Driver findDriverByDriverUniqueId(String driverUniqueId) {
         Driver driver = new Driver();
         String sql = "SELECT id, name, country_code, phone_number " +
-                "FROM rider where rider_unique_id = " + driverUniqueId;
+                "FROM driver where driver_unique_id = " + driverUniqueId;
         try (
                 Statement stmt  = dbDriver.createStatement();
                 ResultSet rs    = stmt.executeQuery(sql)) {
@@ -95,8 +96,8 @@ public class MysqlStorageHelper {
 
 
     public void addDriver(Driver driver) {
-        String sql = " insert into driver (name, country_code, phone_number)"
-                + " values (?, ?, ?)";
+        String sql = " insert into driver (name, country_code, phone_number, driver_unique_id)"
+                + " values (?, ?, ?, ?)";
         try (
                 PreparedStatement pstmt = dbDriver.prepareStatement(sql);) {
 
@@ -104,6 +105,7 @@ public class MysqlStorageHelper {
             pstmt.setString(1, driver.getName());
             pstmt.setString(2, driver.getCountryCode());
             pstmt.setString(3, driver.getPhoneNumber());
+            pstmt.setString(4, driver.getCountryCode()+driver.getPhoneNumber());
             pstmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -208,7 +210,7 @@ public class MysqlStorageHelper {
 
 
     public void saveBooking(Booking booking) {
-        String sql = " insert into vehicle (booking_id, rider_user_id, car_number, start_time, end_time, status)"
+        String sql = " insert into booking (booking_id, rider_user_id, car_number, start_time, end_time, status)"
                 + " values (?, ?, ?, ?, ?, ?, ?)";
         try (
                 PreparedStatement pstmt = dbDriver.prepareStatement(sql);) {

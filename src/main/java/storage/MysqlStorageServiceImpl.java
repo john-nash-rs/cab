@@ -12,13 +12,14 @@ public class MysqlStorageServiceImpl implements IStorageService {
     public static final String COMPLETED = "COMPLETED";
     private static Connection dbDriver = null;
     private static String databaseName = "cabdb";
-    private static String url = "jdbc:mysql://localhost:3306/" + databaseName;
+    private static String url = "jdbc:mysql://localhost:3306/" + databaseName +"?useSSL=false";
     private static String userName = "root";
     private static String password = "";
-    private MysqlStorageHelper mysqlStorageHelper = new MysqlStorageHelper(dbDriver);
+    private MysqlStorageHelper mysqlStorageHelper;
 
     public MysqlStorageServiceImpl() throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         createDbConnection();
+        mysqlStorageHelper = new MysqlStorageHelper(dbDriver);
     }
 
     private static void createDbConnection() throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
@@ -41,7 +42,7 @@ public class MysqlStorageServiceImpl implements IStorageService {
         StringBuffer sb = new StringBuffer();
         sb.append(rider.getCountryCode()).append(rider.getPhoneNumber());
         String riderUniqueId = sb.toString();
-        if(mysqlStorageHelper.findRiderByRiderUniqueId(riderUniqueId) != null){
+        if(!mysqlStorageHelper.findRiderByRiderUniqueId(riderUniqueId).isNull()){
             throw new RuntimeException("Rider already exist in the system");
         }
         mysqlStorageHelper.addRider(rider);
@@ -54,7 +55,7 @@ public class MysqlStorageServiceImpl implements IStorageService {
         StringBuffer sb = new StringBuffer();
         sb.append(driver.getCountryCode()).append(driver.getPhoneNumber());
         String driverUniqueId = sb.toString();
-        if(mysqlStorageHelper.findDriverByDriverUniqueId(driverUniqueId) != null){
+        if(!mysqlStorageHelper.findDriverByDriverUniqueId(driverUniqueId).isNull()){
             throw new RuntimeException("Driver already exist in the system");
         }
         mysqlStorageHelper.addDriver(driver);

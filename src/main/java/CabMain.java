@@ -43,13 +43,13 @@ public class CabMain {
     public static void main(String args[])  {
 
         Rider rider = new Rider();
-        rider.setName("harsh");
-        rider.setCountryCode("+91");
-        rider.setPhoneNumber("910");
+        rider.setName("harsh1344442");
+        rider.setCountryCode("+9132332243");
+        rider.setPhoneNumber("91033323432");
         riderService.register(rider);
 
         Driver driver = new Driver();
-        driver.setName("harsh Driver");
+        driver.setName("harsh Driver1");
         driver.setCountryCode("+91");
         driver.setPhoneNumber("9431");
         driverService.register(driver);
