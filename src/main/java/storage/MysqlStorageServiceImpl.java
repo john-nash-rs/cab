@@ -65,7 +65,7 @@ public class MysqlStorageServiceImpl implements IStorageService {
 
     @Override
     public Boolean saveVehicle(Vehicle vehicle) {
-        if(mysqlStorageHelper.findVehicleByCarNumber(vehicle.getCarNumber()) != null){
+        if(!mysqlStorageHelper.findVehicleByCarNumber(vehicle.getCarNumber()).isNull()){
             throw new RuntimeException("Vehicle already exist in the system");
         }
         mysqlStorageHelper.addVehicle(vehicle);
@@ -75,7 +75,7 @@ public class MysqlStorageServiceImpl implements IStorageService {
 
     @Override
     public Boolean updateLocation(Vehicle vehicle) {
-        if(mysqlStorageHelper.findVehicleByCarNumber(vehicle.getCarNumber()) == null){
+        if(mysqlStorageHelper.findVehicleByCarNumber(vehicle.getCarNumber()).isNull()){
             throw new RuntimeException("Vehicle does not exist in the system");
         }
         Vehicle vehicleInDb = mysqlStorageHelper.findVehicleByCarNumber(vehicle.getCarNumber());
@@ -118,7 +118,7 @@ public class MysqlStorageServiceImpl implements IStorageService {
     @Override
     public List<Booking> rideHistory(String riderUserId) {
         Rider rider = mysqlStorageHelper.findRiderByUserId(riderUserId);
-        List<String> riderBookingIdsHistory = rider.getBookingHistory();
+        List<String> riderBookingIdsHistory = mysqlStorageHelper.getBookingHistoryByRiderId(rider);
         List<Booking> bookingHistory = new ArrayList<>();
         for(String bookingId : riderBookingIdsHistory){
             Booking booking = mysqlStorageHelper.findBookingById(bookingId);

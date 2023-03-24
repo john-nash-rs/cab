@@ -14,4 +14,12 @@ public class Vehicle {
     private String type;
     private Boolean isAvailable;
     private String driverId;
+
+    public boolean isNull() {
+        if(this.getCarNumber() != null || this.getLat() != null || this.getLon() != null || this.getType() != null || this.getIsAvailable() != null || this.getDriverId() != null){
+            return false;
+        }
+        return true;
+
+    }
 }

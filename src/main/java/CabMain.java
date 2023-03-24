@@ -67,7 +67,7 @@ public class CabMain {
         bookingService.book("+91910", 1D, 2D);
 
         List<Booking> bookingHistory = bookingService.history("+91910");
-        System.out.println("bookingHistory"+bookingHistory);
+        System.out.println("bookingHistory "+bookingHistory);
 
 
     }

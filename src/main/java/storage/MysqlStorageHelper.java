@@ -57,14 +57,14 @@ public class MysqlStorageHelper {
     public Rider findRiderByUserId(String userId) {
         Rider rider = new Rider();
         String sql = "SELECT id, name, country_code, phone_number " +
-                "FROM rider where id = " + userId;
+                "FROM rider where rider_unique_id = " + userId;
         try (
                 Statement stmt  = dbDriver.createStatement();
 
                 ResultSet rs    = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 rider.setId(rs.getLong("id"));
-                rider.setName(rs.getString("first_name"));
+                rider.setName(rs.getString("name"));
                 rider.setCountryCode(rs.getString("country_code"));
                 rider.setPhoneNumber(rs.getString("phone_number"));
             }
@@ -115,8 +115,8 @@ public class MysqlStorageHelper {
 
     public Vehicle findVehicleByCarNumber(String carNumber) {
         Vehicle vehicle = new Vehicle();
-        String sql = "SELECT car_number, lat, lon, type, is_available, driver_id" +
-                "FROM vehicle where car_number = " + carNumber;
+        String sql = "SELECT car_number, lat, lon, type, is_available, driver_id " +
+                "FROM vehicle where car_number = " + "'"+carNumber+"'";
         try (
                 Statement stmt  = dbDriver.createStatement();
                 ResultSet rs    = stmt.executeQuery(sql)) {
@@ -136,7 +136,7 @@ public class MysqlStorageHelper {
 
     public List<String> getAllVehicle() {
         List<String> vehicles = new ArrayList<>();
-        String sql = "SELECT car_number" +
+        String sql = "SELECT car_number " +
                 "FROM vehicle";
         try (
                 Statement stmt  = dbDriver.createStatement();
@@ -153,7 +153,9 @@ public class MysqlStorageHelper {
     public void addVehicle(Vehicle vehicle) {
         String sql = " insert into vehicle (car_number, lat, lon, type, is_available, driver_id)"
                 + " values (?, ?, ?, ?, ?, ?)";
+        boolean isVehicleAvailable = vehicle.getIsAvailable() == null ? false : vehicle.getIsAvailable() ? true : false;
         try (
+
                 PreparedStatement pstmt = dbDriver.prepareStatement(sql);) {
 
             // set parameters for statement
@@ -161,8 +163,8 @@ public class MysqlStorageHelper {
             pstmt.setDouble(2, vehicle.getLat());
             pstmt.setDouble(3, vehicle.getLon());
             pstmt.setString(4, vehicle.getType());
-            pstmt.setBoolean(5, vehicle.getIsAvailable());
             pstmt.setString(6, vehicle.getDriverId());
+            pstmt.setBoolean(5, isVehicleAvailable);
             pstmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -189,8 +191,8 @@ public class MysqlStorageHelper {
 
     public Booking findBookingById(String id) {
         Booking booking = new Booking();
-        String sql = "SELECT booking_id, rider_user_id, car_number, start_time, end_time, status" +
-                "FROM booking where booking_id = " + id;
+        String sql = "SELECT booking_id, rider_user_id, car_number, start_time, end_time, status " +
+                "FROM booking where booking_id = " + "'"+id+"'";
         try (
                 Statement stmt  = dbDriver.createStatement();
                 ResultSet rs    = stmt.executeQuery(sql)) {
@@ -211,7 +213,7 @@ public class MysqlStorageHelper {
 
     public void saveBooking(Booking booking) {
         String sql = " insert into booking (booking_id, rider_user_id, car_number, start_time, end_time, status)"
-                + " values (?, ?, ?, ?, ?, ?, ?)";
+                + " values (?, ?, ?, ?, ?, ?)";
         try (
                 PreparedStatement pstmt = dbDriver.prepareStatement(sql);) {
 
@@ -219,10 +221,9 @@ public class MysqlStorageHelper {
             pstmt.setString(1, booking.getBookingId());
             pstmt.setString(2, booking.getRiderUserId());
             pstmt.setString(3, booking.getCarNumber());
-            pstmt.setString(4, booking.getCarNumber());
-            pstmt.setLong(5, booking.getStartTime());
-            pstmt.setLong(6, booking.getEndTime());
-            pstmt.setString(7, booking.getStatus());
+            pstmt.setLong(4, booking.getStartTime());
+            pstmt.setLong(5, booking.getEndTime());
+            pstmt.setString(6, booking.getStatus());
             pstmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -259,6 +260,22 @@ public class MysqlStorageHelper {
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
+    }
+
+    public List<String> getBookingHistoryByRiderId(Rider rider) {
+        List<String> bookingHistory = new ArrayList<>();
+        String sql = "SELECT booking_id " +
+                "FROM bookinghistory where rider_user_id = " + rider.getId();
+        try (
+                Statement stmt  = dbDriver.createStatement();
+                ResultSet rs    = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                bookingHistory.add(rs.getString("booking_id"));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return bookingHistory;
     }
 
 }
