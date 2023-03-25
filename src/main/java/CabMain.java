@@ -8,35 +8,54 @@ import rider.models.Rider;
 import rider.services.IRiderService;
 import rider.services.RiderServiceImpl;
 import storage.IStorageService;
-import storage.StorageServiceImpl;
+import storage.InMemoryStorageServiceImpl;
+import storage.StorageFactory;
 import vehicle.models.Vehicle;
 import vehicle.services.IVehicleService;
 import vehicle.services.VehicleServiceImpl;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class CabMain {
-    private static IStorageService storageService = new StorageServiceImpl();
+    private static StorageFactory storageFactory;
+
+    static {
+        try {
+            storageFactory = new StorageFactory();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private static IStorageService storageService = StorageFactory.getStorageInstance("Mysql");
+//    private static IStorageService storageService = StorageFactory.getStorageInstance("InMemory"); // Argument will be storage type
     private static IRiderService riderService = new RiderServiceImpl(storageService);
     private static IDriverService driverService = new DriverServiceImpl(storageService);
     private static IVehicleService vehicleService = new VehicleServiceImpl(storageService);
     private static IBookingService bookingService = new BookingServiceImpl(vehicleService, storageService);
 
-    public static void main(String args[]){
+    public static void main(String args[])  {
+
         Rider rider = new Rider();
-        rider.setName("harsh");
-        rider.setCountryCode("+91");
-        rider.setPhoneNumber("910");
+        rider.setName("harsh13443442");
+        rider.setCountryCode("+91323332243");
+        rider.setPhoneNumber("910333323432");
         riderService.register(rider);
 
         Driver driver = new Driver();
-        driver.setName("harsh Driver");
-        driver.setCountryCode("+91");
-        driver.setPhoneNumber("9431");
+        driver.setName("harsh Driver1");
+        driver.setCountryCode("+9331");
+        driver.setPhoneNumber("943331");
         driverService.register(driver);
 
         Vehicle vehicle = new Vehicle();
-        vehicle.setCarNumber("KA01HK");
+        vehicle.setCarNumber("KA01HKT");
         vehicle.setLat(1D);
         vehicle.setLon(1D);
         vehicleService.registerVehicle(vehicle);
@@ -48,7 +67,7 @@ public class CabMain {
         bookingService.book("+91910", 1D, 2D);
 
         List<Booking> bookingHistory = bookingService.history("+91910");
-        System.out.println("bookingHistory"+bookingHistory);
+        System.out.println("bookingHistory "+bookingHistory);
 
 
     }

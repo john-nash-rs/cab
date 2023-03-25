@@ -7,14 +7,14 @@ import vehicle.models.Vehicle;
 
 import java.util.*;
 
-public class StorageServiceImpl implements IStorageService {
+public class InMemoryStorageServiceImpl implements IStorageService {
     public static final String COMPLETED = "COMPLETED";
     private Map<String, Rider> riderStorage;
     private Map<String, Driver> driverStorage;
     private Map<String, Vehicle> vehicleStorage;
     private Map<String, Booking> bookingStorage;
 
-    public StorageServiceImpl() {
+    public InMemoryStorageServiceImpl() {
         this.riderStorage = new HashMap<>();
         this.driverStorage = new HashMap<>();
         this.vehicleStorage = new HashMap<>();
