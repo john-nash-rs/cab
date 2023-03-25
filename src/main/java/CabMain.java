@@ -43,19 +43,19 @@ public class CabMain {
     public static void main(String args[])  {
 
         Rider rider = new Rider();
-        rider.setName("harsh1344442");
-        rider.setCountryCode("+9132332243");
-        rider.setPhoneNumber("91033323432");
+        rider.setName("harsh13443442");
+        rider.setCountryCode("+91323332243");
+        rider.setPhoneNumber("910333323432");
         riderService.register(rider);
 
         Driver driver = new Driver();
         driver.setName("harsh Driver1");
-        driver.setCountryCode("+91");
-        driver.setPhoneNumber("9431");
+        driver.setCountryCode("+9331");
+        driver.setPhoneNumber("943331");
         driverService.register(driver);
 
         Vehicle vehicle = new Vehicle();
-        vehicle.setCarNumber("KA01HK");
+        vehicle.setCarNumber("KA01HKT");
         vehicle.setLat(1D);
         vehicle.setLon(1D);
         vehicleService.registerVehicle(vehicle);
