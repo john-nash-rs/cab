@@ -43,7 +43,8 @@ public class MysqlStorageServiceImpl implements IStorageService {
         sb.append(rider.getCountryCode()).append(rider.getPhoneNumber());
         String riderUniqueId = sb.toString();
         if(!mysqlStorageHelper.findRiderByRiderUniqueId(riderUniqueId).isNull()){
-            throw new RuntimeException("Rider already exist in the system");
+            System.out.println("Rider already exist in the system");
+            return false;
         }
         mysqlStorageHelper.addRider(rider);
         System.out.println("******* Rider Added Successfully******");
@@ -56,7 +57,8 @@ public class MysqlStorageServiceImpl implements IStorageService {
         sb.append(driver.getCountryCode()).append(driver.getPhoneNumber());
         String driverUniqueId = sb.toString();
         if(!mysqlStorageHelper.findDriverByDriverUniqueId(driverUniqueId).isNull()){
-            throw new RuntimeException("Driver already exist in the system");
+            System.out.println("Driver already exist in the system");
+            return false;
         }
         mysqlStorageHelper.addDriver(driver);
         System.out.println("******* Driver added Successfully******");
@@ -140,6 +142,12 @@ public class MysqlStorageServiceImpl implements IStorageService {
         booking.setStatus(COMPLETED);
         mysqlStorageHelper.updateBooking(booking);
         return true;
+    }
+
+    @Override
+    public Rider getRiderWithRiderUserID(String riderUserId) {
+        Rider rider = mysqlStorageHelper.findRiderByUserId(riderUserId);
+        return rider;
     }
 
 }

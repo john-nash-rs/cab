@@ -123,4 +123,10 @@ public class InMemoryStorageServiceImpl implements IStorageService {
         booking.setStatus(COMPLETED);
         return true;
     }
+
+    @Override
+    public Rider getRiderWithRiderUserID(String riderUserId) {
+        Rider rider = this.riderStorage.get(riderUserId);
+        return rider;
+    }
 }
