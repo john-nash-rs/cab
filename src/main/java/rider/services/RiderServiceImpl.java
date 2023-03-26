@@ -11,7 +11,6 @@ public class RiderServiceImpl implements  IRiderService{
     }
 
     public Boolean register(Rider rider) {
-        this.storageService.saveRider(rider);
-        return true;
+        return this.storageService.saveRider(rider);
     }
 }

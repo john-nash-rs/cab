@@ -17,4 +17,6 @@ public interface IStorageService {
     Vehicle find(Double lat, Double lon, Double maxDistance);
     List<Booking> rideHistory(String riderUserId);
     Boolean endTrip(Long timeStamp, String bookingId);
+
+    Rider getRiderWithRiderUserID(String riderUserId);
 }
