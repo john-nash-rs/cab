@@ -12,8 +12,9 @@ vehicle/models/Vehicle.class
 rider/services/IRiderService.class
 storage/MysqlStorageServiceImpl.class
 driver/models/Driver.class
+booking/CabMain.class
 storage/MysqlStorageHelper.class
 booking/models/Booking.class
+controller/RiderServelet.class
 booking/service/BookingServiceImpl.class
-CabMain.class
 rider/models/PersonalInfo.class
