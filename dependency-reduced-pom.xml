@@ -11,6 +11,11 @@
         <configuration>
           <source>9</source>
           <target>9</target>
+          <archive>
+            <manifest>
+              <mainClass>CabMain</mainClass>
+            </manifest>
+          </archive>
         </configuration>
       </plugin>
       <plugin>
@@ -44,4 +49,8 @@
       </plugin>
     </plugins>
   </build>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
 </project>
