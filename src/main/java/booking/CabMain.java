@@ -1,3 +1,5 @@
+package booking;
+
 import booking.models.Booking;
 import booking.service.BookingServiceImpl;
 import booking.service.IBookingService;
