@@ -38,7 +38,7 @@ public class CabMain {
             throw new RuntimeException(e);
         }
     }
-    private static IStorageService storageService = StorageFactory.getStorageInstance("Mysql");
+    private static IStorageService storageService = StorageFactory.getStorageInstance("InMemory");
 //    private static IStorageService storageService = StorageFactory.getStorageInstance("InMemory"); // Argument will be storage type
     private static IRiderService riderService = new RiderServiceImpl(storageService);
     private static IDriverService driverService = new DriverServiceImpl(storageService);
@@ -55,12 +55,12 @@ public class CabMain {
         server.join();
     }
     public static void main(String args[]) throws Exception {
-        start();
+//        start();
 
         Rider rider = new Rider();
         rider.setName("harsh13443");
-        rider.setCountryCode("+913233322");
-        rider.setPhoneNumber("91033323432");
+        rider.setCountryCode("+91");
+        rider.setPhoneNumber("910");
         riderService.register(rider);
 
         Driver driver = new Driver();
