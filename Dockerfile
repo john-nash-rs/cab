@@ -10,13 +10,4 @@ COPY src/ ./src
 # Build the application using maven
 RUN mvn clean package
 
-
-
-# Second stage: minimal runtime environment
-From openjdk:8-jre-alpine
-WORKDIR /cab
-
-# copy jar from the first stage
-COPY --from=build /cab/target/cab-1.0-SNAPSHOT.jar .
-EXPOSE 8080
-CMD ["java", "-jar", "cab-1.0-SNAPSHOT.jar"]
+CMD ["java", "-jar", "target/cab-1.0-SNAPSHOT.jar"]
