@@ -14,6 +14,7 @@ storage/MysqlStorageServiceImpl.class
 driver/models/Driver.class
 storage/MysqlStorageHelper.class
 booking/models/Booking.class
+controller/RiderServelet.class
 booking/service/BookingServiceImpl.class
 CabMain.class
 rider/models/PersonalInfo.class

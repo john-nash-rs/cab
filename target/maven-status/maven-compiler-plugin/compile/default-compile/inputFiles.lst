@@ -5,6 +5,7 @@
 /Users/Kunal/Desktop/Projects/cab/src/main/java/vehicle/models/Vehicle.java
 /Users/Kunal/Desktop/Projects/cab/src/main/java/rider/services/RiderServiceImpl.java
 /Users/Kunal/Desktop/Projects/cab/src/main/java/booking/service/BookingServiceImpl.java
+/Users/Kunal/Desktop/Projects/cab/src/main/java/controller/RiderServelet.java
 /Users/Kunal/Desktop/Projects/cab/src/main/java/CabMain.java
 /Users/Kunal/Desktop/Projects/cab/src/main/java/storage/MysqlStorageServiceImpl.java
 /Users/Kunal/Desktop/Projects/cab/src/main/java/booking/models/Booking.java

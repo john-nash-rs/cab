@@ -15,10 +15,21 @@
                 <configuration>
                     <source>9</source>
                     <target>9</target>
+                    <archive>
+                        <manifest>
+                            <!-- give full qualified name of your main class-->
+                            <mainClass>CabMain</mainClass>
+
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 <!--        <dependency>-->
