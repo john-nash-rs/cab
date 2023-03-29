@@ -1,10 +1,15 @@
+#Base Image
 FROM maven:latest AS build
 
 WORKDIR /cab
-# Has to be set explictly to find binaries
+
+#Copy pom file
 COPY pom.xml pom.xml
+
+#Install dependency
 RUN mvn dependency:go-offline
 
+#Copy all file
 COPY src/ ./src
 
 # Build the application using maven
