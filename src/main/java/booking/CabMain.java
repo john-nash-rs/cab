@@ -46,7 +46,7 @@ public class CabMain {
     private static IBookingService bookingService = new BookingServiceImpl(vehicleService, storageService);
 
     public static void start() throws Exception {
-        Server server = new Server(8090);
+        Server server = new Server(80);
         ServletHandler handler = new ServletHandler();
         ServletHolder holder = new ServletHolder(new RiderServelet(storageService, riderService));
         handler.addServletWithMapping(holder, "/rider");
@@ -55,11 +55,11 @@ public class CabMain {
         server.join();
     }
     public static void main(String args[]) throws Exception {
-//        start();
+
 
         Rider rider = new Rider();
         rider.setName("harsh13443");
-        rider.setCountryCode("+91");
+        rider.setCountryCode("91");
         rider.setPhoneNumber("910");
         riderService.register(rider);
 
@@ -79,10 +79,11 @@ public class CabMain {
         vehicle.setLon(2D);
         vehicleService.updateLocation(vehicle);
 
-        bookingService.book("+91910", 1D, 2D);
+        bookingService.book("91910", 1D, 2D);
+        start();
 
-        List<Booking> bookingHistory = bookingService.history("+91910");
-        System.out.println("bookingHistory "+bookingHistory);
+//        List<Booking> bookingHistory = bookingService.history("+91910");
+//        System.out.println("bookingHistory "+bookingHistory);
 
 
     }
